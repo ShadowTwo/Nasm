@@ -1,0 +1,46 @@
+     1                                  ;main.asm
+     2                                  ; vim:ft=nasm
+     3                                  ;external functions
+     4                                  extern printf
+     5                                  
+     6                                  section .data
+     7 00000000 2A00000000000000        	number1 dq 42
+     8 00000008 2900000000000000        	number2 dq 41
+     9 00000010 4E756D62657231203E-     	fmt1 db "Number1 >= Number2",10,0
+     9 00000019 3D204E756D62657232-
+     9 00000022 0A00               
+    10 00000024 4E756D62657231203C-     	fmt2 db "Number1 < Number2",10,0
+    10 0000002D 204E756D626572320A-
+    10 00000036 00                 
+    11                                  section .bss
+    12                                  section .text
+    13                                  	global main
+    14                                  main:
+    15                                  	
+    16 00000000 55                      	push rbp
+    17 00000001 4889E5                  	mov rbp, rsp
+    18                                  
+    19 00000004 488B0425[00000000]      	mov rax, [number1]
+    20 0000000C 488B1C25[08000000]      	mov rbx, [number2]
+    21                                  
+    22 00000014 4839D8                  	cmp rax,rbx
+    23 00000017 7D0C                    	jge greater
+    24                                  
+    25 00000019 48BF-                   	mov rdi, fmt2
+    25 0000001B [2400000000000000] 
+    26 00000023 EB0A                    	jmp exit
+    27                                  greater:
+    28 00000025 48BF-                   	mov rdi, fmt1
+    28 00000027 [1000000000000000] 
+    29                                  
+    30                                  exit:
+    31 0000002F B800000000              	mov rax, 0
+    32 00000034 E8(00000000)            	call printf
+    33 00000039 4889EC                  	mov rsp, rbp
+    34 0000003C 5D                      	pop rbp
+    35 0000003D C3                      	ret
+    36                                  
+    37                                  	;call clean exit
+    38                                  	;mov rax, 60 ; 60 = exit 
+    39                                  	;mov rdi, 0 ; 0 = success exit code
+    40                                  	;syscall ; quit application
