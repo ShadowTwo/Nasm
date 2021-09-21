@@ -1,0 +1,27 @@
+     1                                  global main
+     2                                  section .data
+     3 00000000 1400000001000000FF-     	TestData dd 20,1,-1,2,-2,3,3,20,5,1,2,4,20,4,-1,-2,5
+     3 00000009 FFFFFF02000000FEFF-
+     3 00000012 FFFF03000000030000-
+     3 0000001B 001400000005000000-
+     3 00000024 010000000200000004-
+     3 0000002D 000000140000000400-
+     3 00000036 0000FFFFFFFFFEFFFF-
+     3 0000003F FF05000000         
+     4 00000044 11000000                	length dd 17
+     5                                  section .text
+     6                                  main:
+     7 00000000 55                      	push rbp
+     8 00000001 4889E5                  	mov rbp,rsp
+     9                                  
+    10                                  	;move my test data into place
+    11 00000004 BF[00000000]            	mov edi, TestData ; array of data
+    12 00000009 8B3425[44000000]        	mov esi, [length] ; legth of array
+    13                                  
+    14 00000010 31C0                    	xor eax,eax
+    15                                  	.loop:
+    16 00000012 3307                    	xor eax,[rdi]
+    17 00000014 83C704                  	add edi, 4
+    18 00000017 FFCE                    	dec esi
+    19 00000019 75F7                    	jnz .loop
+    20 0000001B C3                      	ret

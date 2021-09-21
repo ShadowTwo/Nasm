@@ -1,0 +1,19 @@
+     1                                  section .text
+     2                                  global main
+     3                                  
+     4                                  main:
+     5                                  
+     6 00000000 4831FF                    xor rdi, rdi
+     7                                  
+     8 00000003 48C7C0F6FFFFFF            mov rax, -10
+     9                                   
+    10 0000000A 4883F803                  cmp rax, 3
+    11 0000000E 7E05                      jle Done
+    12 00000010 BF01000000                	mov rdi, 1
+    13                                  
+    14                                    Done:
+    15                                  
+    16                                    ;call clean exit
+    17 00000015 B83C000000                mov rax, 60 ; 60 = exit 
+    18                                    ;mov rdi, 0 ; 0 = success exit code
+    19 0000001A 0F05                      syscall ; quit application

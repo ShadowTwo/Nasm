@@ -1,0 +1,59 @@
+     1                                  extern printf
+     2                                  section .data
+     3 00000000 52657475726E65643A-       fmt db "Returned: %d",0xa,0
+     3 00000009 2025640A00         
+     4                                  section .text
+     5                                  global main
+     6                                  
+     7                                  main:
+     8                                  
+     9 00000000 BF64000000                mov edi, 100
+    10                                  
+    11 00000005 31C0                      xor eax, eax
+    12 00000007 41B903000000              mov r9d,3 ; current multiple
+    13 0000000D 41BA03000000              mov r10d,3 ; base multiple
+    14 00000013 4D31DB                    xor r11,r11 ; total
+    15 00000016 4D31E4                    xor r12, r12
+    16 00000019 4189FC                    mov r12d, edi
+    17                                    .loop:
+    18 0000001C 4539E1                      cmp r9d, r12d
+    19 0000001F 7F08                        jg .Next
+    20 00000021 4501CB                        add r11d, r9d
+    21 00000024 4501D1                        add r9d,r10d
+    22 00000027 EBF3                          jmp .loop
+    23                                    .Next:
+    24                                      ;cmp r10d, 5
+    25                                      ;je .end
+    26 00000029 41B905000000                mov r9d, 5
+    27 0000002F 41BA05000000                mov r10d, 5
+    28                                      ;xor r12,r12
+    29                                      ;mov r12d,edi
+    30                                      .loop2:
+    31 00000035 4539E1                        cmp r9d, r12d
+    32 00000038 7F18                          jg .end
+    33                                        ;Test for duplicate with 3
+    34 0000003A B803000000                      mov eax, 3
+    35 0000003F 4831D2                          xor rdx,rdx ;Zero our the return for the remainder
+    36 00000042 41F7F9                          idiv r9d
+    37 00000045 83FA00                          cmp edx, 0 ;it is divisable by 3, ignore
+    38 00000048 7403                            je .Skip
+    39 0000004A 4501CB                            add r11d, r9d
+    40                                          ;good result add to total and move to next
+    41                                          .Skip:
+    42 0000004D 4501D1                          add r9d,r10d
+    43 00000050 EBE3                            jmp .loop2
+    44                                    .end:
+    45 00000052 4153                      push r11
+    46                                    
+    47 00000054 48BF-                     mov rdi, fmt
+    47 00000056 [0000000000000000] 
+    48 0000005E 4489DE                    mov esi, r11d
+    49 00000061 4831C0                    xor rax,rax
+    50 00000064 E8(00000000)              call printf
+    51                                    
+    52 00000069 415B                      pop r11
+    53 0000006B 4489D8                    mov eax, r11d
+    54                                    ;call clean exit
+    55 0000006E B83C000000                mov rax, 60 ; 60 = exit 
+    56 00000073 BF00000000                mov rdi, 0 ; 0 = success exit code
+    57 00000078 0F05                      syscall ; quit application

@@ -1,0 +1,45 @@
+     1                                  ;c2.asm
+     2                                  extern printf
+     3                                  
+     4                                  section .data
+     5 00000000 56616C75653A202564-     	fmt db	"Value: %d ",0
+     5 00000009 2000               
+     6                                  section .bss
+     7                                  section .text
+     8                                  	global main
+     9                                  main:
+    10 00000000 4883FF00                	cmp rdi, 0 ; NUll reference
+    11 00000004 7417                        je .end
+    12                                  	
+    13 00000006 56                      	push rsi
+    14                                  
+    15 00000007 4831C0                  	xor rax, rax
+    16 0000000A 4D31C9                  	xor r9,r9	
+    17 0000000D 8B06                    	mov eax, [rsi]
+    18                                  					    
+    19                                  	.loop:
+    20 0000000F 4289040F                		mov [rdi+r9], eax
+    21 00000013 4801D0                  		add rax, rdx
+    22 00000016 49FFC1                  		inc r9
+    23 00000019 FFCE                    		dec esi   
+    24 0000001B 75F2                    		jnz .loop
+    25                                  	.end:
+    26 0000001D 4C8D17                  	lea r10, [rdi]           ; copying <outp> to RAX as the result
+    27 00000020 C3                      	ret
+    28                                  
+    29 00000021 59                      	pop rcx
+    30 00000022 4D31C9                  	xor r9,r9
+    31                                  	
+    32                                  	.print:
+    33 00000025 48BF-                   	mov rdi, fmt
+    33 00000027 [0000000000000000] 
+    34 0000002F 4B8B340A                	mov rsi, [r10+r9]
+    35 00000033 4831C0                      xor rax,rax
+    36 00000036 E8(00000000)            	call printf
+    37 0000003B 48FFC9                  	dec rcx
+    38 0000003E 75E5                    	jnz .print
+    39                                  
+    40                                  	;call clean exit
+    41 00000040 B83C000000              	mov rax, 60 ; 60 = exit 
+    42 00000045 BF00000000              	mov rdi, 0 ; 0 = success exit code
+    43 0000004A 0F05                    	syscall ; quit application
